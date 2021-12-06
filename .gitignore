@@ -4,6 +4,9 @@ coverage
 coverage.json
 typechain
 
+# notebooks
+.ipynb_checkpoints
+
 #Hardhat files
 cache
 artifacts
