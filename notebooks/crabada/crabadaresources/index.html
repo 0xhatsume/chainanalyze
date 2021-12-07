@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Search by Stats</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<style>
+    html,
+    body {
+        font-family: Tahoma;
+        font-size: 16px;
+        text-align: center;
+        scroll-behavior: smooth;
+    }
+
+    .button {
+        border-radius: 8px;
+        border: none;
+        background-color: #56A5E1;
+        color: white;
+        font-family: Tahoma;
+        font-size: 13px;
+        text-align: center;
+        padding: 10px 15px;
+        cursor: pointer;
+    }
+
+    .button:hover {
+        background-color: #438cc3;
+    }
+
+    .nav {
+        border: 1px solid #ccc;
+        border-width: 1px 0;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+
+    .nav li {
+        display: inline;
+    }
+
+    .nav a {
+        display: inline-block;
+        padding: 10px;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        table-layout: fixed;
+    }
+
+    td,
+    th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        background-color: #04AA6D;
+        color: white;
+    }
+</style>
+
+<body onload="checkSettings();">
+    <ul class="nav">
+        <li><a href="https://crabada-resources.github.io/pure_sniping/">Pure Sniping</a></li>
+        <li><a href="https://crabada-resources.github.io/looting_statistics/">Looting statistics</a></li>
+        <li><a href="https://crabada-resources.github.io/should_i_buy/">Should I buy this crab?</a></li>
+        <li><a href="https://crabada-resources.github.io/tavern_statistics/">Tavern Statistics</a></li>
+        <li><a href="https://crabada-resources.github.io/breeding_calculator/">Breeding calculator</a></li>
+    </ul>
+
+    <div id="header">
+        <h2>Search by Stats</h2>
+        </br>
+        <form id="crabs_settings" onsubmit="return false">
+            Min HP (optional): &nbsp;&nbsp;<input type="number" id="hp" step="1" style="width: 10em" /><br><br>
+            Min Damage (optional): &nbsp;&nbsp;<input type="number" id="damage" step="1" style="width: 10em" /><br><br>
+            Min Armor (optional): &nbsp;&nbsp;<input type="number" id="armor" step="1" style="width: 10em" /><br><br>
+            Min Speed (optional): &nbsp;&nbsp;<input type="number" id="speed" step="1" style="width: 10em" /><br><br>
+            Min Critical (optional): &nbsp;&nbsp;<input type="number" id="critical" step="1" style="width: 10em" /><br><br>
+
+            <button id="calculateBtn" class="button" onclick="calculate()">Find crabs!</button>
+        </form>
+
+        <div id="results" style="display: none">
+            <h3> Results </h3>
+            <p id="loading">Loading...</p>
+            <div id="resuls_text"></div>
+            <br>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript">
+    function checkSettings() {
+        let hp = document.getElementById("hp");
+        let damage = document.getElementById("damage");
+        let armor = document.getElementById("armor");
+        let speed = document.getElementById("speed");
+        let critical = document.getElementById("critical");
+
+        if (localStorage.getItem("damage") != null) {
+            damage.setAttribute("value", localStorage.getItem("damage"));
+        }
+        if (localStorage.getItem("hp") != null) {
+            hp.setAttribute("value", localStorage.getItem("hp"));
+        }
+        if (localStorage.getItem("armor") != null) {
+            armor.setAttribute("value", localStorage.getItem("armor"));
+        }
+        if (localStorage.getItem("speed") != null) {
+            speed.setAttribute("value", localStorage.getItem("speed"));
+        }
+        if (localStorage.getItem("critical") != null) {
+            critical.setAttribute("value", localStorage.getItem("critical"));
+        }
+
+    }
+
+    function lookup_subclass(id) {
+        subclass_map = {
+            1: "Emeraldo",
+            2: "Crazor",
+            3: "Vocrano",
+            4: "Spikey",
+            5: "Frozo",
+            6: "Cratos",
+            7: "Rubie",
+            8: "Amida",
+            16: "Staro",
+            17: "Craken",
+            18: "Crobster",
+            19: "Cralmon",
+            20: "Creasure",
+            21: "Crucket",
+            22: "Crele",
+            23: "Crotopus",
+            31: "Bitcoin",
+            32: "Cardano",
+            33: "Near",
+            34: "Ether",
+            35: "Cz",
+            36: "Fantom",
+            37: "Avalanche",
+            38: "Solana",
+            46: "Cragma",
+            47: "C-Rex",
+            48: "Charoite",
+            49: "Rocco",
+            50: "Chief",
+            51: "Cropion",
+            52: "Crazurite",
+            53: "Crava",
+            61: "Twinner",
+            62: "Onepunch",
+            63: "Cropter",
+            64: "Plasma",
+            65: "Lasery",
+            66: "Redeye",
+            67: "Crocket",
+            68: "Gear",
+            76: "Skul",
+            77: "Cragon",
+            78: "Crombie",
+            79: "Deadeye",
+            80: "Cranosis",
+            81: "Crailer",
+            82: "Camun-Ra",
+            83: "Crauldron",
+            91: "Pearlio",
+            92: "Lapidari",
+            93: "Paraiba",
+            94: "Cramethyst",
+            95: "Cranet",
+            96: "Croyo",
+            97: "Earl Cray",
+            98: "Magnifiso",
+            106: "Natura",
+            107: "Freshie",
+            108: "Adam",
+            109: "Eva",
+            110: "Bulbie",
+            111: "Celon",
+            112: "Cranana",
+            113: "Crawberry"
+        }
+
+        return subclass_map[id]
+    }
+
+
+    function calculate() {
+        clearForm()
+        let loading = document.getElementById("loading");
+
+        let results = document.getElementById("results");
+        results.style.display = "block";
+
+        let hp = document.getElementById("hp").value;
+        let damage = document.getElementById("damage").value;
+        let armor = document.getElementById("armor").value;
+        let speed = document.getElementById("speed").value;
+        let critical = document.getElementById("critical").value;
+
+        localStorage.setItem("hp", hp);
+        localStorage.setItem("damage", damage);
+        localStorage.setItem("armor", armor);
+        localStorage.setItem("speed", speed);
+        localStorage.setItem("critical", critical);
+
+        const crabs_fixed = {}
+        crabs_fixed['RUINED'] = []
+        crabs_fixed['SUNKEN'] = []
+        crabs_fixed['SURGE'] = []
+        crabs_fixed['BULK'] = []
+        crabs_fixed['PRIME'] = []
+        crabs_fixed['GEM'] = []
+        crabs_fixed['CRABOID'] = []
+        crabs_fixed['ORGANIC'] = []
+
+        fetch(`https://api.crabada.com/public/crabada/selling?limit=2000&stage=1&orderBy=price&order=asc`).then(response => response.json())
+            .then(function (response) {
+                crabs = response["result"]["data"];
+                crabs.forEach(c => {
+                    aux = {}
+                    if (hp && c.hp < hp) {
+                        return
+                    }
+                    if (damage && c.damage < damage) {
+                        return
+                    }
+                    if (armor && c.armor < armor) {
+                        return
+                    }
+                    if (speed && c.speed < speed) {
+                        return
+                    }
+                    if (critical && c.critical < critical) {
+                        return
+                    }
+
+                    aux.price = Math.round(c.price / 1.0e18)
+                    aux.breed_count = c.breed_count
+                    aux.crabada_id = c.crabada_id
+                    aux.class_name = c.class_name
+                    aux.subclass_name = lookup_subclass(c.crabada_subclass)
+                    aux.hp = c.hp
+                    aux.damage = c.damage
+                    aux.armor = c.armor
+                    aux.speed = c.speed
+                    aux.critical = c.critical
+                    aux.url = `<a href="https://marketplace.crabada.com/crabada/${c.crabada_id}" target="_blank" rel="noopener noreferrer">${c.crabada_id}</a>`
+
+                    crabs_fixed[aux.class_name].push(aux)
+                })
+                loading.innerHTML = "";
+
+                let resuls_text = document.getElementById("resuls_text");
+                resuls_text.innerHTML = ''
+
+                for (const crabclass in crabs_fixed) {
+                    resuls_text.innerHTML += `<h4>${crabclass}</h4>`
+                    if (crabs_fixed[crabclass].length > 0) {
+                        let table = ''
+                        table += `<table><thead><tr><th>Price (TUS)</th><th>Subclass</th><th>HP</th><th>Damage</th><th>Armor</th><th>Speed</th><th>Critical</th><th>Breed count</th><th>Crab ID</th></tr></thead><tbody>`
+                        crabs_fixed[crabclass].forEach(c => {
+                            table += `<tr><td>${c.price}</td><td>${c.subclass_name}</td><td>${c.hp}</td><td>${c.damage}</td><td>${c.armor}</td><td>${c.speed}</td><td>${c.critical}</td><td>${c.breed_count}</td><td>${c.url}</td></tr>`
+                        })
+                        table += "</tbody></table></br>"
+                        resuls_text.innerHTML += table
+
+                    } else {
+                        resuls_text.innerHTML += `None found!`
+                    }
+                }
+
+
+
+
+
+            }).catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    function clearForm() {
+        let resuls_text = document.getElementById("resuls_text");
+        let results = document.getElementById("results");
+
+        resuls_text.innerHTML = "";
+        results.style.display = "none";
+
+        let loading = document.getElementById("loading");
+        loading.innerHTML = "Loading...";
+    }
+
+
+</script>
+
+</html>
