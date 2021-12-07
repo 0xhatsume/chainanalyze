@@ -1,1 +1,0 @@
-docker run --rm -it -p 8888:8888 -v $(pwd):/srv jupyter/minimal-notebook bash -c "/opt/conda/bin/jupyter notebook --ip=0.0.0.0 --port=8888 --notebook-dir=/srv --allow-root --no-browser"

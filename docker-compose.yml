@@ -1,0 +1,14 @@
+version: '3'
+services:
+  ds:
+    image: datascience:latest
+    container_name: ds
+    hostname: ds
+    build:
+      context: .
+      dockerfile: ./notebooks/Dockerfile
+    ports:
+      - 8888:8888
+    volumes:
+      - ./notebooks:/srv
+    restart: unless-stopped
