@@ -5,9 +5,8 @@ RUN apt-get update && apt-get install -y python3-dev gcc libc-dev
 
 RUN pip install --no-cache-dir \
     jupyter_contrib_nbextensions \
-    web3==5.25.0 
-
-RUN jupyter contrib nbextension install
+    web3==5.25.0 \
+    && jupyter contrib nbextension install
 
 WORKDIR /srv
 #USER jovyan
