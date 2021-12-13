@@ -6,6 +6,7 @@ typechain
 
 # notebooks
 .ipynb_checkpoints
+**/data/
 
 #Hardhat files
 cache
