@@ -8,6 +8,8 @@ RUN pip install --no-cache-dir \
     web3==5.25.0 \
     plotly==5.4.0 \
     streamlit==1.2.0 \
+    networkx==2.6.3 \
+    python-igraph==0.9.8 \
     && jupyter contrib nbextension install \
     && jupyter nbextensions_configurator enable \
     && jupyter nbextension enable collapsible_headings/main
